@@ -1,1 +1,1 @@
-# projetos-trainee-computacao-equipe03
+# projeto-trainee-computacao-equipe03
