@@ -22,6 +22,7 @@ bool Simulator::init()
 	  return false;
   }
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    SDL_SetRenderDrawColor(renderer, 79, 121, 66, 255);
     if (renderer == nullptr){
 	  SDL_DestroyWindow(window);
 	  cout << "Renderer could not be created! Error: " << SDL_GetError() << endl;
@@ -34,8 +35,16 @@ bool Simulator::init()
 
 void Simulator::render()
 {
-    SDL_SetRenderDrawColor(renderer, 79, 121, 66, 255);
     SDL_RenderClear(renderer);
+    
+    SDL_Rect goalRect;
+    goalRect.x = 5;
+    goalRect.y = 240;
+    goalRect.w = 25;  
+    goalRect.h = 100;
+    SDL_SetRenderDrawColor(renderer, 225, 225, 225, 255); 
+    SDL_RenderFillRect(renderer, &goalRect);
+    
     SDL_RenderPresent(renderer);
 }
 

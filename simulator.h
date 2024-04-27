@@ -9,9 +9,8 @@ class Simulator {
       ~Simulator();
 
       bool init();
-      void handleEvent();
-      void update();
       void render();
+      void handleEvent();
       void clean();
 
 
