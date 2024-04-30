@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package soccer;
+
+// Command to move the player or kick the ball
+message Command {
+  enum CommandType {
+    MOVE = 0;
+  }
+
+  CommandType type = 1;
+  float angle = 2;  // Direction in degrees for MOVE, force direction for KICK
+  float force = 3;  // Used only for KICK to determine the kick strength
+}

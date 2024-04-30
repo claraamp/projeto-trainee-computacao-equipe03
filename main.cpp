@@ -1,16 +1,15 @@
 #include "simulator.cpp"
 
-Simulator simulator;
+int main(int argc, char *argv[])
+{
+  Simulator simulator;
 
-int main(int argc, char *argv[]) {
+  if (!simulator.init())
+  {
+    return 1;
+  }
 
-  if (!simulator.init()) {
-        return 1;
-    }
-  
-    simulator.render();
-    simulator.handleEvent();
-    simulator.clean();
+  simulator.run();
 
-    return 0;
+  return 0;
 }
