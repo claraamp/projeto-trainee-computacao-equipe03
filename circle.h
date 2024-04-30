@@ -23,7 +23,7 @@ public:
   void move(float deltaTime);
 
   // Shows the ball on the screen
-  void render();
+  void render(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
   RenderData *renderData;
 

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Simulator::Simulator(RenderData *renderData, Circle ball) : quit(false), renderData(renderData), ball(ball)
+Simulator::Simulator(RenderData *renderData, Circle ball, Circle robot) : quit(false), renderData(renderData), ball(ball), robot(robot)
 {
 }
 
@@ -59,7 +59,7 @@ void Simulator::handleEvent()
         }
         else if (e.type == SDL_KEYDOWN)
         {
-            ball.handleEvent(e);
+            robot.handleEvent(e);
             handleKeyEvents(e);
         }
     }
@@ -99,7 +99,8 @@ void Simulator::update(float deltaTime)
     SDL_RenderFillRect(renderData->renderer, &goalRectL);
     SDL_RenderFillRect(renderData->renderer, &goalRectR);
 
-    ball.render();
+    ball.render(0xFF, 0xFF, 0xFF, 0xFF);
+    robot.render(0x00, 0x00, 0x8A, 0xFF);
 
     SDL_RenderPresent(renderData->renderer);
 }
@@ -114,9 +115,10 @@ void Simulator::run()
         handleEvent();
 
         Uint32 currentTicks = SDL_GetTicks();
-        float dt = static_cast<float>(currentTicks - lastTicks) / 1000.0f;
+        float dt = 1 - (static_cast<float>(currentTicks - lastTicks) / 1000.0f);
 
-        ball.move(1.0f);
+        ball.move(dt);
+        robot.move(dt);
         update(dt);
 
         lastTicks = currentTicks;

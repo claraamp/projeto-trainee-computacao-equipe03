@@ -50,22 +50,23 @@ void Circle::handleEvent(SDL_Event &e)
 
 void Circle::move(float deltaTime)
 {
-  mPosX += mVelX * deltaTime;
-  mPosY += mVelY * deltaTime;
+  mPosX += (mVelX * deltaTime);
+  mPosY += (mVelY * deltaTime);
 
-  if ((mPosX - CIRCLE_RADIUS < 0) || (mPosX + CIRCLE_RADIUS > renderData->SCREEN_WIDTH))
+  if ((mPosX < 0) || (mPosX + CIRCLE_RADIUS > renderData->SCREEN_WIDTH))
   {
-    mPosX -= mVelX * deltaTime;
+    mPosX -= (mVelX * deltaTime);
   }
 
-  if ((mPosY - CIRCLE_RADIUS < 0) || (mPosY + CIRCLE_RADIUS > renderData->SCREEN_HEIGHT))
+  if ((mPosY < 0) || (mPosY + CIRCLE_RADIUS > renderData->SCREEN_HEIGHT))
   {
-    mPosY -= mVelY * deltaTime;
+    mPosY -= (mVelY * deltaTime);
   }
 }
 
-void Circle::render()
+void Circle::render(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
+  SDL_SetRenderDrawColor(renderData->renderer, r, g, b, a);
   SDL_RenderFillCircle(renderData->renderer, mPosX, mPosY, CIRCLE_RADIUS);
 }
 

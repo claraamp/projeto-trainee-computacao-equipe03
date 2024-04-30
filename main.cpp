@@ -5,7 +5,8 @@ int main(int argc, char *argv[])
 {
   RenderData renderData;
   Circle ball(&renderData, renderData.SCREEN_WIDTH / 2, renderData.SCREEN_HEIGHT / 2);
-  Simulator simulator(&renderData, ball);
+  Circle robot(&renderData, (renderData.SCREEN_WIDTH / 2) + 80, renderData.SCREEN_HEIGHT / 2);
+  Simulator simulator(&renderData, ball, robot);
 
   if (!simulator.init())
   {

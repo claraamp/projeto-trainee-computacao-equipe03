@@ -9,7 +9,7 @@
 class Simulator
 {
 public:
-  Simulator(RenderData *renderData, Circle circle);
+  Simulator(RenderData *renderData, Circle circle, Circle robot);
   ~Simulator();
 
   bool init();
@@ -26,6 +26,7 @@ private:
   SDL_Event e;
 
   Circle ball;
+  Circle robot;
 };
 
 #endif // simulator_h
