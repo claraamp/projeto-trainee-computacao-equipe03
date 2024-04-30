@@ -2,6 +2,8 @@
 #define simulator_h
 
 #include <SDL.h>
+#include <SDL_image.h>
+#include "robo.h"
 
 class Simulator {
     public:
@@ -17,6 +19,7 @@ class Simulator {
     private:
       SDL_Window *window;
       SDL_Renderer *renderer;
+      Robo robo;
 };
 
 #endif

@@ -1,10 +1,11 @@
 #include <SDL.h>
 #include "simulator.h"
 #include <iostream>
+#include "robo.cpp"
 
 using namespace std;
 
-Simulator::Simulator()
+Simulator::Simulator() : window(nullptr), renderer(nullptr), robo(500, 150, 40, 40)
 {}
 Simulator::~Simulator()
 {}
@@ -36,7 +37,9 @@ bool Simulator::init()
 void Simulator::render()
 {
     SDL_RenderClear(renderer);
-    
+
+    robo.draw(renderer);
+
     SDL_Rect goalRect;
     goalRect.x = 5;
     goalRect.y = 240;
