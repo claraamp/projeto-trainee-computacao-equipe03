@@ -1,14 +1,16 @@
 #include "simulator.h"
+#include "circle.h"
 #include <iostream>
 
 using namespace std;
 
-Simulator::Simulator() : quit(false)
+Simulator::Simulator(RenderData *renderData, Circle ball) : quit(false), renderData(renderData), ball(ball)
 {
 }
+
 Simulator::~Simulator()
 {
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(renderData->renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
@@ -21,21 +23,29 @@ bool Simulator::init()
         cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << endl;
         return false;
     }
-    window = SDL_CreateWindow("Simulador", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow(
+        "Simulador",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        renderData->SCREEN_WIDTH,
+        renderData->SCREEN_HEIGHT,
+        SDL_WINDOW_SHOWN //
+    );
     if (window == nullptr)
     {
         cout << "Window could not be created! SDL_Error: " << SDL_GetError() << endl;
         SDL_Quit();
         return false;
     }
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-    if (renderer == nullptr)
+    renderData->renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    if (renderData->renderer == nullptr)
     {
         SDL_DestroyWindow(window);
         cout << "Renderer could not be created! Error: " << SDL_GetError() << endl;
         SDL_Quit();
         return false;
     }
+
     return true;
 }
 
@@ -49,6 +59,7 @@ void Simulator::handleEvent()
         }
         else if (e.type == SDL_KEYDOWN)
         {
+            ball.handleEvent(e);
             handleKeyEvents(e);
         }
     }
@@ -69,8 +80,8 @@ void Simulator::handleKeyEvents(const SDL_Event &e)
 
 void Simulator::update(float deltaTime)
 {
-    SDL_SetRenderDrawColor(renderer, 79, 121, 66, 255);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderData->renderer, 79, 121, 66, 255);
+    SDL_RenderClear(renderData->renderer);
 
     SDL_Rect goalRectL;
     goalRectL.x = 5;
@@ -79,16 +90,18 @@ void Simulator::update(float deltaTime)
     goalRectL.h = 100;
 
     SDL_Rect goalRectR;
-    goalRectR.x = width - (5 + 25);
+    goalRectR.x = renderData->SCREEN_WIDTH - (5 + 25);
     goalRectR.y = 240;
     goalRectR.w = 25;
     goalRectR.h = 100;
 
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderFillRect(renderer, &goalRectL);
-    SDL_RenderFillRect(renderer, &goalRectR);
+    SDL_SetRenderDrawColor(renderData->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderFillRect(renderData->renderer, &goalRectL);
+    SDL_RenderFillRect(renderData->renderer, &goalRectR);
 
-    SDL_RenderPresent(renderer);
+    ball.render();
+
+    SDL_RenderPresent(renderData->renderer);
 }
 
 void Simulator::run()
@@ -99,9 +112,11 @@ void Simulator::run()
     while (!quit)
     {
         handleEvent();
+
         Uint32 currentTicks = SDL_GetTicks();
         float dt = static_cast<float>(currentTicks - lastTicks) / 1000.0f;
 
+        ball.move(1.0f);
         update(dt);
 
         lastTicks = currentTicks;

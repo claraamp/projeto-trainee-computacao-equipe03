@@ -1,12 +1,15 @@
+
 #ifndef simulator_h
 #define simulator_h
 
 #include "SDLConfig.h"
+#include "circle.h"
+#include "renderData.h"
 
 class Simulator
 {
 public:
-  Simulator();
+  Simulator(RenderData *renderData, Circle circle);
   ~Simulator();
 
   bool init();
@@ -15,14 +18,14 @@ public:
   void handleEvent();
   void handleKeyEvents(const SDL_Event &e);
 
+  RenderData *renderData;
+
 private:
   SDL_Window *window;
-  SDL_Renderer *renderer;
   bool quit;
   SDL_Event e;
 
-  static const int width = 900;
-  static const int height = 600;
+  Circle ball;
 };
 
-#endif
+#endif // simulator_h
