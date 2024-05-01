@@ -8,14 +8,14 @@
 class Circle
 {
 public:
-  // The dimensions of the ball
-  static const int CIRCLE_RADIUS = 20;
-
   // Maximum axis velocity of the ball
   static const int CIRCLE_VEL = 1;
 
   // Initializes the variables
-  Circle(RenderData &renderData, int x, int y);
+  Circle(RenderData &renderData, int x, int y, int radius);
+
+  // The dimensions of the ball
+  int radius = 20;
 
   // Takes key presses and adjusts the ball's velocity
   void handleEvent(SDL_Event &e);
@@ -29,13 +29,13 @@ public:
   CircleCheck toCheck();
 
   RenderData &renderData;
-
-private:
   // The X and Y offsets of the ball
   int mPosX, mPosY;
 
   // The velocity of the ball
   int mVelX, mVelY;
+
+private:
 };
 
 int SDL_RenderFillCircle(SDL_Renderer *renderer, int x, int y, int radius);
