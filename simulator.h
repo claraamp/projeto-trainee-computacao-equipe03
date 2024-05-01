@@ -9,7 +9,7 @@
 class Simulator
 {
 public:
-  Simulator(RenderData *renderData, Circle circle, Circle robot);
+  Simulator(RenderData &renderData, Circle circle, Circle robot);
   ~Simulator();
 
   bool init();
@@ -18,7 +18,7 @@ public:
   void handleEvent();
   void handleKeyEvents(const SDL_Event &e);
 
-  RenderData *renderData;
+  RenderData &renderData;
 
 private:
   SDL_Window *window;

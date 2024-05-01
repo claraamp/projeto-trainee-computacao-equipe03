@@ -1,7 +1,7 @@
 #include "simulator.h"
 #include "circle.h"
 
-Circle::Circle(RenderData *renderData, int x, int y) : renderData(renderData), mPosX(x), mPosY(y), mVelX(0), mVelY(0)
+Circle::Circle(RenderData &renderData, int x, int y) : renderData(renderData), mPosX(x), mPosY(y), mVelX(0), mVelY(0)
 {
 }
 
@@ -53,12 +53,12 @@ void Circle::move(float deltaTime)
   mPosX += (mVelX * deltaTime);
   mPosY += (mVelY * deltaTime);
 
-  if ((mPosX < 0) || (mPosX + CIRCLE_RADIUS > renderData->SCREEN_WIDTH))
+  if ((mPosX - CIRCLE_RADIUS < 0) || (mPosX + CIRCLE_RADIUS > renderData.SCREEN_WIDTH))
   {
     mPosX -= (mVelX * deltaTime);
   }
 
-  if ((mPosY < 0) || (mPosY + CIRCLE_RADIUS > renderData->SCREEN_HEIGHT))
+  if ((mPosY - CIRCLE_RADIUS < 0) || (mPosY + CIRCLE_RADIUS > renderData.SCREEN_HEIGHT))
   {
     mPosY -= (mVelY * deltaTime);
   }
@@ -66,60 +66,14 @@ void Circle::move(float deltaTime)
 
 void Circle::render(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
-  SDL_SetRenderDrawColor(renderData->renderer, r, g, b, a);
-  SDL_RenderFillCircle(renderData->renderer, mPosX, mPosY, CIRCLE_RADIUS);
+  SDL_SetRenderDrawColor(renderData.renderer, r, g, b, a);
+  SDL_RenderFillCircle(renderData.renderer, mPosX, mPosY, CIRCLE_RADIUS);
 }
 
-/**
- * Implementation from here https://gist.github.com/Gumichan01/332c26f6197a432db91cc4327fcabb1c
- */
-int SDL_RenderFillCircle(SDL_Renderer *renderer, int x, int y, int radius)
+CircleCheck Circle::toCheck()
 {
-  int offsetx, offsety, d;
-  int status;
-
-  // CHECK_RENDERER_MAGIC(renderer, -1);
-
-  offsetx = 0;
-  offsety = radius;
-  d = radius - 1;
-  status = 0;
-
-  while (offsety >= offsetx)
-  {
-
-    status += SDL_RenderDrawLine(renderer, x - offsety, y + offsetx,
-                                 x + offsety, y + offsetx);
-    status += SDL_RenderDrawLine(renderer, x - offsetx, y + offsety,
-                                 x + offsetx, y + offsety);
-    status += SDL_RenderDrawLine(renderer, x - offsetx, y - offsety,
-                                 x + offsetx, y - offsety);
-    status += SDL_RenderDrawLine(renderer, x - offsety, y - offsetx,
-                                 x + offsety, y - offsetx);
-
-    if (status < 0)
-    {
-      status = -1;
-      break;
-    }
-
-    if (d >= 2 * offsetx)
-    {
-      d -= 2 * offsetx + 1;
-      offsetx += 1;
-    }
-    else if (d < 2 * (radius - offsety))
-    {
-      d += 2 * offsety - 1;
-      offsety -= 1;
-    }
-    else
-    {
-      d += 2 * (offsety - offsetx - 1);
-      offsety -= 1;
-      offsetx += 1;
-    }
-  }
-
-  return status;
+  float x = static_cast<float>(mPosX);
+  float y = static_cast<float>(mPosY);
+  float r = CIRCLE_RADIUS / 2;
+  return CircleCheck{x, y, r};
 }

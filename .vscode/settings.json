@@ -63,5 +63,8 @@
       "binaryPath": "/home/ivensauro/projeto-trainee-computacao-equipe03/simulator",
       "binaryArgs": []
     }
-  ]
+  ],
+  "files.associations": {
+    "cmath": "cpp"
+  }
 }
