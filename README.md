@@ -9,8 +9,10 @@
 ## Execução
 
 > sudo apt install libsdl2-dev libsdl2-2.0-0 -y
+
 > sudo apt install libprotobuf-dev -y
-> make && ./simulator
+
+> make && ./simulator  
 
 ## Objetivos:
 
