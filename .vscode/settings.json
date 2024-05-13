@@ -66,5 +66,8 @@
   ],
   "files.associations": {
     "cmath": "cpp"
-  }
+  },
+  "cSpell.words": [
+    "SDLK"
+  ]
 }

@@ -5,6 +5,12 @@
 #include "renderData.h"
 #include "utils.h"
 
+struct Vec2
+{
+  float x = 0;
+  float y = 0;
+};
+
 class Circle
 {
 public:
@@ -12,16 +18,18 @@ public:
   static const int CIRCLE_VEL = 1;
 
   // Initializes the variables
-  Circle(RenderData &renderData, int x, int y, int radius);
+  Circle(RenderData &renderData, Vec2 pos, int radius);
 
   // The dimensions of the ball
   int radius = 20;
 
   // Takes key presses and adjusts the ball's velocity
-  void handleEvent(SDL_Event &e);
+  void SDLEventToVelocity(SDL_Event &e);
 
   // Moves the ball
   void move(float deltaTime);
+  void setPosition(Vec2 pos);
+  void setVelocity(Vec2 vel);
 
   // Shows the ball on the screen
   void render(Uint8 r, Uint8 g, Uint8 b, Uint8 a);
@@ -30,10 +38,9 @@ public:
 
   RenderData &renderData;
   // The X and Y offsets of the ball
-  int mPosX, mPosY;
 
-  // The velocity of the ball
-  int mVelX, mVelY;
+  Vec2 position;
+  Vec2 velocity;
 
 private:
 };

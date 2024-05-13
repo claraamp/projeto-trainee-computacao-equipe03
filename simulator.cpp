@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "simulator.h"
 #include "circle.h"
 #include "utils.h"
@@ -22,7 +20,7 @@ bool Simulator::init()
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
-        cout << "SDL could not initialize! SDL_Error: " << SDL_GetError() << endl;
+        printf("SDL could not initialize! SDL_Error: %s", SDL_GetError());
         return false;
     }
     window = SDL_CreateWindow(
@@ -35,7 +33,7 @@ bool Simulator::init()
     );
     if (window == nullptr)
     {
-        cout << "Window could not be created! SDL_Error: " << SDL_GetError() << endl;
+        printf("Window could not be created! SDL_Error: %s", SDL_GetError());
         SDL_Quit();
         return false;
     }
@@ -43,7 +41,7 @@ bool Simulator::init()
     if (renderData.renderer == nullptr)
     {
         SDL_DestroyWindow(window);
-        cout << "Renderer could not be created! Error: " << SDL_GetError() << endl;
+        printf("Renderer could not be created! Error: %s", SDL_GetError());
         SDL_Quit();
         return false;
     }
@@ -59,24 +57,10 @@ void Simulator::handleEvent()
         {
             quit = true;
         }
-        else if (e.type == SDL_KEYDOWN)
+        else
         {
-            robot.handleEvent(e);
-            handleKeyEvents(e);
+            robot.SDLEventToVelocity(e);
         }
-    }
-}
-
-void Simulator::handleKeyEvents(const SDL_Event &e)
-{
-    switch (e.key.keysym.sym)
-    {
-    // DUPLICATE, just as example on how to do this
-    case SDLK_ESCAPE:
-        quit = true;
-        break;
-    default:
-        break;
     }
 }
 
@@ -127,7 +111,11 @@ void Simulator::run()
 
         if (checkCircleCollisionOptimized(ball.toCheck(), robot.toCheck()))
         {
-            printf("colidiu com a bola\n");
+            Vec2 result;
+            result.x = (ball.position.x - robot.position.x) * 0.2;
+            result.y = (ball.position.y - robot.position.y) * 0.2;
+
+            ball.setVelocity(result);
         }
     }
 }

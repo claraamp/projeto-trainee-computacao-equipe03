@@ -1,48 +1,55 @@
 #include "simulator.h"
 #include "circle.h"
 
-Circle::Circle(RenderData &renderData, int x, int y, int radius) : renderData(renderData), mPosX(x), mPosY(y), mVelX(0), mVelY(0), radius(radius)
+Circle::Circle(RenderData &renderData, Vec2 pos, int radius) : renderData(renderData), position(pos), velocity({0, 0}), radius(radius)
 {
 }
 
-void Circle::handleEvent(SDL_Event &e)
+void Circle::setPosition(Vec2 pos)
 {
-  // If a key was pressed
-  if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
+  position = pos;
+}
+
+void Circle::setVelocity(Vec2 vel)
+{
+  velocity = vel;
+}
+
+void Circle::SDLEventToVelocity(SDL_Event &e)
+{
+  if (e.type == SDL_KEYDOWN)
   {
-    // Adjust the velocity
     switch (e.key.keysym.sym)
     {
-    case SDLK_UP:
-      mVelY -= CIRCLE_VEL;
+    case SDLK_w:
+      velocity.y = -CIRCLE_VEL;
       break;
-    case SDLK_DOWN:
-      mVelY += CIRCLE_VEL;
+    case SDLK_s:
+      velocity.y = +CIRCLE_VEL;
       break;
-    case SDLK_LEFT:
-      mVelX -= CIRCLE_VEL;
+    case SDLK_a:
+      velocity.x = -CIRCLE_VEL;
       break;
-    case SDLK_RIGHT:
-      mVelX += CIRCLE_VEL;
+    case SDLK_d:
+      velocity.x = +CIRCLE_VEL;
       break;
     }
   }
-  else if (e.type == SDL_KEYUP && e.key.repeat == 0)
+  if (e.type == SDL_KEYUP)
   {
-    // Adjust the velocity
     switch (e.key.keysym.sym)
     {
-    case SDLK_UP:
-      mVelY += CIRCLE_VEL;
+    case SDLK_w:
+      velocity.y = 0;
       break;
-    case SDLK_DOWN:
-      mVelY -= CIRCLE_VEL;
+    case SDLK_s:
+      velocity.y = 0;
       break;
-    case SDLK_LEFT:
-      mVelX += CIRCLE_VEL;
+    case SDLK_a:
+      velocity.x = 0;
       break;
-    case SDLK_RIGHT:
-      mVelX -= CIRCLE_VEL;
+    case SDLK_d:
+      velocity.x = 0;
       break;
     }
   }
@@ -50,30 +57,30 @@ void Circle::handleEvent(SDL_Event &e)
 
 void Circle::move(float deltaTime)
 {
-  mPosX += (mVelX * deltaTime);
-  mPosY += (mVelY * deltaTime);
+  position.x += (velocity.x * deltaTime);
+  position.y += (velocity.y * deltaTime);
 
-  if ((mPosX - radius < 0) || (mPosX + radius > renderData.SCREEN_WIDTH))
+  if ((position.x - radius < 0) || (position.x + radius > renderData.SCREEN_WIDTH))
   {
-    mPosX -= (mVelX * deltaTime);
+    position.x += (velocity.x * deltaTime);
   }
 
-  if ((mPosY - radius < 0) || (mPosY + radius > renderData.SCREEN_HEIGHT))
+  if ((position.y - radius < 0) || (position.y + radius > renderData.SCREEN_HEIGHT))
   {
-    mPosY -= (mVelY * deltaTime);
+    position.y += (velocity.y * deltaTime);
   }
 }
 
 void Circle::render(Uint8 r, Uint8 g, Uint8 b, Uint8 a)
 {
   SDL_SetRenderDrawColor(renderData.renderer, r, g, b, a);
-  SDL_RenderFillCircle(renderData.renderer, mPosX, mPosY, radius);
+  SDL_RenderFillCircle(renderData.renderer, position.x, position.y, radius);
 }
 
 CircleCheck Circle::toCheck()
 {
-  float x = static_cast<float>(mPosX);
-  float y = static_cast<float>(mPosY);
+  float x = static_cast<float>(position.x);
+  float y = static_cast<float>(position.y);
   float r = radius / 2;
   return CircleCheck{x, y, r};
 }
